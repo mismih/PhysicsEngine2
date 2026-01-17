@@ -9,7 +9,7 @@ typedef struct {
 Circle c = {
 	.pos = {960, 550},
 	.radius = 50,
-	.color = BLUE
+	.color = SKYBLUE
 };
 
 void DrawCircleEntity(Circle* c) {
@@ -20,6 +20,8 @@ int main(void)
 {
 	const int screenWidth = 1920;
 	const int screenHeight = 1080;
+
+	int buttonIsClicked = 0;
 
 
 	InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
@@ -40,26 +42,19 @@ int main(void)
 		Vector2 circlePos = { 960, 550 };
 		float radius = 50;
 
+		Rectangle button = { 1700, 100, 100, 60 };
+		DrawRectangle(1700, 100, 100, 60, RED);
+		DrawText("Drop", 1735, 125, 8, BLACK);
 
-		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-			if (CheckCollisionPointCircle(mouse, circlePos, radius)) {
-				isClickedOnCircle = !isClickedOnCircle;
-			}
+		if (CheckCollisionPointRec(GetMousePosition(), button) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+			buttonIsClicked = 1;
 		}
+		
+		if (buttonIsClicked) {
+			DrawCircleEntity(&c);
+		}
+		
 
-		if (isClickedOnCircle) {
-			DrawCircle(960, 550, 50, RED);
-		}
-		else {
-			DrawCircle(960, 550, 50, BLUE);
-		}
-
-		if (IsCursorOnScreen()) {
-			DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-		}
-		else {
-			DrawText("Move the mouse cursor inside the window to see this text.", 100, 200, 20, LIGHTGRAY);
-		}
 
 		EndDrawing();
 	}
