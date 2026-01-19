@@ -22,6 +22,7 @@ int main(void)
 	const int screenHeight = 1080;
 
 	int buttonIsClicked = 0;
+	int x = 100;
 
 
 	InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
@@ -37,8 +38,6 @@ int main(void)
 
 		ClearBackground(RAYWHITE);
 
-		Vector2 mouse = GetMousePosition();
-
 		Vector2 circlePos = { 960, 550 };
 		float radius = 50;
 
@@ -52,10 +51,11 @@ int main(void)
 		
 		if (buttonIsClicked) {
 			DrawCircleEntity(&c);
+			DrawCircle(100, x, 50, GREEN);
+			if (x < 1030) x += 3;
+			if (x < 1030) x += 3;
 		}
 		
-
-
 		EndDrawing();
 	}
 	CloseWindow();  
