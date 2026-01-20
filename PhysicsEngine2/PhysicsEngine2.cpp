@@ -1,9 +1,15 @@
 ﻿#include "raylib.h"
 #include <math.h>
+#include <stdio.h>
 
-#define BALL_COUNT 100
+// simple physics engine that simulates some balls dropping
+// its in 1 file cuz its kinda simple, didnt want to mess w headers
+// this is like a starting project so i get used to raylib
+// next project finna be tuff but gonna take way longer
 
-typedef struct {
+#define BALL_COUNT 100	// max number of balls that u can drop 
+
+typedef struct {	// ball structure	
 	Vector2 pos;
 	Vector2 vel;
 	float radius;
@@ -11,11 +17,11 @@ typedef struct {
 	bool active;
 } Circle;
 
-static void DrawCircleEntity(const Circle* c) {
+static void DrawCircleEntity(const Circle* c) {    // function for drawing defined ball
 	DrawCircleV(c->pos, c->radius, c->color);
 }
 
-static void UpdateCircle(Circle* c, float dt, float gravity, int screenWidth, int screenHeight) {
+static void UpdateCircle(Circle* c, float dt, float gravity, int screenWidth, int screenHeight) {	// following every circle frame to frame, changing speed and vector
 	if (!c->active) return;
 
 	c->vel.y += gravity * dt;
@@ -33,7 +39,7 @@ static void UpdateCircle(Circle* c, float dt, float gravity, int screenWidth, in
 		if (fabs(c->vel.y) < 30.0f) c->vel.y = 0.0f;
 	}
 
-	if (c->pos.x < c->radius) {
+	if (c->pos.x < c->radius) { 
 		c->pos.x = c->radius;
 		c->vel.x *= -0.7f;
 	}
@@ -44,7 +50,7 @@ static void UpdateCircle(Circle* c, float dt, float gravity, int screenWidth, in
 	}
 }
 
-static void SpawnBall(Circle balls[], int* count, Vector2 spawnPos) {
+static void SpawnBall(Circle balls[], int* count, Vector2 spawnPos) {	// do i have to explain
 	if (*count >= BALL_COUNT) return;
 
 	Circle b = { 0 };
@@ -57,7 +63,7 @@ static void SpawnBall(Circle balls[], int* count, Vector2 spawnPos) {
 
 	b.radius = 20.0f + (float)GetRandomValue(0, 30);
 
-	b.color.r = (unsigned char)GetRandomValue(50, 255);
+	b.color.r = (unsigned char)GetRandomValue(50, 255);    // making it more fun
 	b.color.g = (unsigned char)GetRandomValue(50, 255);
 	b.color.b = (unsigned char)GetRandomValue(50, 255);
 	b.color.a = 255;
@@ -66,7 +72,7 @@ static void SpawnBall(Circle balls[], int* count, Vector2 spawnPos) {
 	(*count)++;
 }
 
-static void ResolveBallBall(Circle* a, Circle* b, float restitution) {
+static void ResolveBallBall(Circle* a, Circle* b, float restitution) {    // checking are balls colliding with eachother and resolving the conflict
 	if (!a->active || !b->active) return;
 
 	float dx = b->pos.x - a->pos.x;
@@ -112,7 +118,9 @@ static void ResolveBallBall(Circle* a, Circle* b, float restitution) {
 }
 
 int main(void) {
-	const int screenWidth = 1920;
+	printf("Welcome to my simple raylib physics engine!\n");	// writes this message in the console u can delete this if u want
+
+	const int screenWidth = 1920;	
 	const int screenHeight = 1080;
 
 	InitWindow(screenWidth, screenHeight, "raylib physics sim");
@@ -147,7 +155,7 @@ int main(void) {
 			UpdateCircle(&balls[i], dt, gravity, screenWidth, screenHeight);
 		}
 
-		for (int iter = 0; iter < 2; iter++) {
+		for (int iter = 0; iter < 2; iter++) {    // kinda slow but its a simple project, there is also a matrix approach for checking for collisions
 			for (int i = 0; i < ballCount; i++) {
 				for (int j = i + 1; j < ballCount; j++) {
 					ResolveBallBall(&balls[i], &balls[j], restitution);
@@ -167,7 +175,7 @@ int main(void) {
 		for (int i = 0; i < ballCount; i++) {
 			DrawCircleEntity(&balls[i]);
 		}
-
+		
 		EndDrawing();
 	}
 
